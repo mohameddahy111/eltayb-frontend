@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -13,25 +12,37 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import {Block, Delete, HowToReg} from '@mui/icons-material'
+import {
+  Block,
+  Delete,
+  DriveFileRenameOutlineOutlined,
+  HowToReg,
+} from "@mui/icons-material";
 import SearchAuto from "../../layout/components/SearchAuto";
+import { Store } from "../../context/StorgState";
+import { useGetUsers } from "../../hooks/useApi";
+import { useNavigate } from "react-router-dom";
 
 const Users = () => {
-  const [users, setUsers] = useState([]);
-
-  const getAllUsers = async () => {
-    await axios.get("/all_users").then((res) => {
-      setUsers(res.data.users);
-      console.log(res.data.users);
-    });
-  };
+  const navigate = useNavigate();
+  const { users } = useGetUsers();
+  const { search, setSearch } = Store();
   useEffect(() => {
-    getAllUsers();
-  }, []);
+    setSearch(users);
+  }, [users]);
   return (
     <Box pt={2}>
       <Container>
-        <SearchAuto SearchAuto={}/>
+        <Typography
+          fontWeight={700}
+          component={"h1"}
+          variant="h4"
+          align="center"
+          textTransform={"capitalize"}
+        >
+          users
+        </Typography>
+        {users && <SearchAuto data={users} setSearch={setSearch} title={'Search by user Email'} element={'userEmail'} />}
         <Paper elevation={4} sx={{ padding: "10px" }}>
           <TableContainer>
             <Table>
@@ -58,8 +69,8 @@ const Users = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map((x, index) => (
-                  <TableRow>
+                {search?.map((x, index) => (
+                  <TableRow key={index}>
                     <TableCell align="center">
                       <Typography>{x.userName} </Typography>
                     </TableCell>
@@ -77,11 +88,32 @@ const Users = () => {
                       <Typography>{x.userPhone} </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      {x._isBlocked ? (<Button startIcon={<HowToReg/>}>unBlocked </Button>) :((<Button startIcon={<Block/>}>Blocked </Button>))}
+                      {x._isBlocked ? (
+                        <Button startIcon={<HowToReg />}>unBlocked </Button>
+                      ) : (
+                        <Button startIcon={<Block />}>Blocked </Button>
+                      )}
                     </TableCell>
 
-                    <TableCell align="center">
-                      <Button variant='contained' color='error' startIcon={<Delete/>}>Delete</Button>
+                    <TableCell align="center" sx={{ display: "flex", gap: 1 }}>
+                      <Button
+                        variant="contained"
+                        color="info"
+                        startIcon={<DriveFileRenameOutlineOutlined />}
+                        onClick={() => {
+                          navigate(`/admin/users/${x._id}`);
+                        }}
+                      >
+                        detials
+                      </Button>
+
+                      <Button
+                        variant="contained"
+                        color="error"
+                        startIcon={<Delete />}
+                      >
+                        Delete
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

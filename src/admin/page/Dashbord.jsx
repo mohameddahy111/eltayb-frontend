@@ -8,8 +8,8 @@ const Dashbord = () => {
   return (
     <Box>
       <Grid container spacing={1}>
-        <Grid item md={1} sx={{borderRight :'solid .5px grey' , height:'100vh' , mt:'5px'}}>
-          <List>
+        <Grid item md={1} xs={2} sx={{mt:'5px' ,boxShadow :'0px 0px 1px grey' ,height:'100vh' }}>
+          <List >
             {adminsLink.map((x, index) => (
               <ListItem key={index}>
                 <Tooltip title={x.title} placement="right-start">
@@ -25,7 +25,7 @@ const Dashbord = () => {
             ))}
             </List>
         </Grid>
-        <Grid item md={11}>
+        <Grid item md={11} xs={10}>
           <Outlet />
         </Grid>
       </Grid>

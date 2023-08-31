@@ -11,8 +11,12 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
+import { useSnackbar } from 'notistack';
+import {useNavigate} from 'react-router-dom'
 
 export default function Profile() {
+  const{enqueueSnackbar ,closeSnackbar} = useSnackbar()
+  const navigate = useNavigate()
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -21,6 +25,16 @@ export default function Profile() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const logout =()=>{
+    localStorage.removeItem('userInfo')
+    localStorage.removeItem('userToken')
+    enqueueSnackbar('you are logged out' , {variant:'success'})
+    handleClose()
+    // navigate('/')
+    window.location.assign('/')
+
+
+  }
   return (
     <React.Fragment>
       <Box >
@@ -91,7 +105,7 @@ export default function Profile() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={logout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

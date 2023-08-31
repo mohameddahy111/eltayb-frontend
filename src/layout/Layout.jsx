@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Store } from "../context/StorgState";
 import styles from "./css/layout.module.css";
 import { useTranslation } from "react-i18next";
-import { Link, Outlet, } from "react-router-dom";
+import { Link, Outlet, useNavigate, } from "react-router-dom";
 import { NightlightRoundOutlined, WbSunnyOutlined } from "@mui/icons-material";
 import {
   AppBar,
@@ -21,11 +21,19 @@ import Language from "./components/Language";
 import Dashbord from "../admin/page/Dashbord";
 
 const Layout = () => {
-  const { userInfo } = Store();
+  const navigate =useNavigate()
+  const { userInfo ,homeSearch, setHomeSearch } = Store();
   const { i18n, t } = useTranslation();
   const [dark, setDark] = useState(
     localStorage.darkMode ? JSON.parse(localStorage.darkMode) : false
   );
+  useEffect(()=>{
+    if (userInfo && userInfo?._isAdmin === true) {
+      navigate('/admin')
+    }
+
+  },[])
+
 
   const theme = createTheme(
     {
@@ -72,7 +80,7 @@ const Layout = () => {
             <Box></Box>
 
             <Box>
-              {userInfo?._isAdmin === false &&  <SearchAuto />}
+              {userInfo?._isAdmin === false &&  <SearchAuto data={homeSearch} setSearch={setHomeSearch} element={''} title={'Search by name of product'} />}
              
             </Box>
             <Box
@@ -110,7 +118,7 @@ const Layout = () => {
           </Toolbar>
         </AppBar>
         <main>
-          {userInfo?._isAdmin ? (
+          {userInfo?._isAdmin&& window.location.pathname.includes('admin')? (
             <Dashbord/>
           ):(<Outlet/>)}
         </main>

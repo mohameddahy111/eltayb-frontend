@@ -1,13 +1,8 @@
-import axios from "axios";
-import { useSnackbar } from "notistack";
-import { createContext, useContext, useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-
+import { useMediaQuery } from "@mui/material";
+import { createContext, useContext, useState } from "react";
 
 const StorgState = createContext();
 export const StorgStateProvider = ({ children }) => {
-  // const navigate = useNavigate()
-  const {enqueueSnackbar ,closeSnackbar}=useSnackbar()
   const [userInfo, setUserInfo] = useState(
     localStorage.userInfo ? JSON.parse(localStorage.userInfo) : null
   );
@@ -15,33 +10,11 @@ export const StorgStateProvider = ({ children }) => {
     localStorage.userToken ? JSON.parse(localStorage.userToken) : null
   );
 
-  // const getUser = async (token) => {
-  //   closeSnackbar()
-  //   await axios
-  //     .get("/find_user", { headers: { authorization: "Bearer "+ token  } })
-  //     .then((res) => {
-  //    if (res.data.error) {
-  //     enqueueSnackbar(`${res.data.error.message}` ,{variant:'error'})
-  //    } else {
-  //      setUserInfo(res.data);
-  //      localStorage.setItem("userInfo" , JSON.stringify(res.data))
-  //      enqueueSnackbar(`Wellcome ${res.data.userName}` ,{variant:'success'})
-  //      if (res.data._isAdmin === true) {
-  //       navigate('/admin')
-  //      } else {
-  //       navigate('/')
-  //      }
+  const [search, setSearch] = useState([]);
+  const [productSearch, setProductSearch] = useState([]);
+  const [homeSearch, setHomeSearch] = useState([]);
+  const mobileDevice = useMediaQuery('(max-width: 768px)');
 
-      
-  //    }
-  //     });
-  // };
-// useEffect(()=>{
-//   if (userToken !== null) {
-    
-//     getUser()
-//   }
-// } ,[userToken ])
   return (
     <StorgState.Provider
       value={{
@@ -49,6 +22,9 @@ export const StorgStateProvider = ({ children }) => {
         setUserInfo,
         userToken,
         setUserToken,
+        search,
+        setSearch,
+        productSearch, setProductSearch,mobileDevice,homeSearch, setHomeSearch
         // getUser
       }}
     >
