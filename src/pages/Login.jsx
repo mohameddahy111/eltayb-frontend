@@ -64,6 +64,9 @@ const Login = () => {
           } else {
             navigate("/");
           }
+        }else{
+          enqueueSnackbar(res.data.error, {variant :'error'})
+
         }
       })
       .catch((err) => {
